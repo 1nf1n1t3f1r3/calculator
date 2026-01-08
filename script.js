@@ -1,3 +1,22 @@
+// Grab HTML
+const inputField = document.getElementById("inputField");
+const numberButtons = document.querySelectorAll(".number");
+const operatorButtons = document.querySelectorAll(".operator");
+const equalsButton = document.querySelector(".equals");
+
+// Variables
+let currentInput = "";
+let firstValue = null;
+let secondValue = null;
+let currentOperator = null;
+let result = null;
+
+// let shouldResetInput = false;
+
+// Input Field
+inputField.textContent = "0";
+
+// Basic Functions
 function add(a, b) {
   return a + b;
 }
@@ -14,6 +33,7 @@ function divide(a, b) {
   return a / b;
 }
 
+// Pick which one we need
 function operate(operator, a, b) {
   if (operator === "+") {
     return add(a, b);
@@ -25,3 +45,79 @@ function operate(operator, a, b) {
     return divide(a, b);
   }
 }
+
+// Number Button listeners
+numberButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.textContent;
+
+    // Delete Logic
+    if (value === "C") {
+      currentInput = "";
+      inputField.textContent = "0";
+      return;
+    }
+
+    // Backspace Logic
+    if (value === "Backspace") {
+      currentInput = currentInput.slice(0, -1);
+      inputField.textContent = currentInput || "0";
+      return;
+    }
+
+    // Decimal logic. Skip, or add a Zero if needed
+    if (value === ".") {
+      if (currentInput.includes(".")) return;
+
+      if (currentInput === "") {
+        currentInput = "0.";
+      } else {
+        currentInput += ".";
+      }
+    }
+
+    // Digit logic
+    else {
+      if (currentInput === "0") {
+        currentInput = value;
+      } else {
+        currentInput += value;
+      }
+    }
+
+    // Normal Logic
+    inputField.textContent = currentInput;
+  });
+});
+
+// Operator Button Listeners
+operatorButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const operator = button.textContent;
+
+    // Only commit if there's something to commit
+    if (currentInput === "") return;
+
+    firstValue = Number(currentInput);
+    currentOperator = operator;
+    currentInput = "";
+
+    inputField.textContent = "0";
+  });
+});
+
+equalsButton.addEventListener("click", () => {
+  // Only run if we have an operator and something in currentInput
+  if (currentOperator && currentInput !== "") {
+    const secondValue = Number(currentInput);
+    result = operate(currentOperator, firstValue, secondValue);
+
+    // Display the result
+    inputField.textContent = result;
+
+    // Prepare for chaining
+    firstValue = result;
+    currentInput = "";
+    currentOperator = null;
+  }
+});
