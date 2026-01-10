@@ -13,6 +13,8 @@ let secondValue = null;
 let currentOperator = null;
 let result = null;
 
+let savedResult = false;
+
 let history = [];
 
 // let shouldResetInput = false;
@@ -75,6 +77,18 @@ function updateDisplay() {
   }
 }
 
+function c() {
+  currentInput = "";
+  firstValue = null;
+  secondValue = null;
+  currentOperator = null;
+  result = null;
+
+  inputField.textContent = "0";
+  outputField.textContent = "0";
+  updateDisplay();
+}
+
 // Number Button listeners
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -82,15 +96,7 @@ numberButtons.forEach((button) => {
 
     // Delete Logic
     if (value === "C") {
-      currentInput = "";
-      firstValue = null;
-      secondValue = null;
-      currentOperator = null;
-      result = null;
-
-      inputField.textContent = "0";
-      outputField.textContent = "0";
-      updateDisplay();
+      c();
 
       return;
     }
@@ -116,6 +122,10 @@ numberButtons.forEach((button) => {
 
     // Digit logic
     else {
+      if (result !== null) {
+        c();
+      }
+
       if (currentInput === "0") {
         currentInput = value;
       } else {
@@ -175,5 +185,7 @@ equalsButton.addEventListener("click", () => {
     firstValue = result;
     currentInput = result;
     currentOperator = null;
+
+    savedResult = true;
   }
 });
