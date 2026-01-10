@@ -1,5 +1,7 @@
 // Grab HTML
 const inputField = document.getElementById("inputField");
+const outputField = document.getElementById("outputField");
+
 const numberButtons = document.querySelectorAll(".number");
 const operatorButtons = document.querySelectorAll(".operator");
 const equalsButton = document.querySelector(".equals");
@@ -46,6 +48,28 @@ function operate(operator, a, b) {
   }
 }
 
+// Display Function
+function updateDisplay() {
+  // Input field (what user is typing or result)
+  inputField.textContent = currentInput || currentOperator || "0";
+
+  if (currentInput !== null) {
+    if (currentOperator === null) {
+      // Only a committed value
+      outputField.textContent = currentInput;
+    } else {
+      // Operator exists → show expression
+      outputField.textContent =
+        currentInput !== ""
+          ? `${firstValue} ${currentOperator} ${currentInput}`
+          : `${firstValue} ${currentOperator}`;
+    }
+  } else {
+    // Nothing committed yet
+    outputField.textContent = "";
+  }
+}
+
 // Number Button listeners
 numberButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -55,6 +79,7 @@ numberButtons.forEach((button) => {
     if (value === "C") {
       currentInput = "";
       inputField.textContent = "0";
+      updateDisplay();
       return;
     }
 
@@ -62,6 +87,7 @@ numberButtons.forEach((button) => {
     if (value === "Backspace") {
       currentInput = currentInput.slice(0, -1);
       inputField.textContent = currentInput || "0";
+      updateDisplay();
       return;
     }
 
@@ -86,7 +112,8 @@ numberButtons.forEach((button) => {
     }
 
     // Normal Logic
-    inputField.textContent = currentInput;
+    // inputField.textContent = currentInput;
+    updateDisplay();
   });
 });
 
@@ -100,9 +127,14 @@ operatorButtons.forEach((button) => {
 
     firstValue = Number(currentInput);
     currentOperator = operator;
+
     currentInput = "";
 
-    inputField.textContent = "0";
+    // Show expression context
+    // outputField.textContent = `${firstValue} ${currentOperator}`;
+    updateDisplay();
+
+    // inputField.textContent = "0";
   });
 });
 
@@ -111,6 +143,10 @@ equalsButton.addEventListener("click", () => {
   if (currentOperator && currentInput !== "") {
     const secondValue = Number(currentInput);
     result = operate(currentOperator, firstValue, secondValue);
+
+    // Show full expression
+    // outputField.textContent = `${firstValue} ${currentOperator} ${secondValue}`;
+    updateDisplay();
 
     // Display the result
     inputField.textContent = result;
