@@ -64,6 +64,9 @@ function updateDisplay() {
           ? `${firstValue} ${currentOperator} ${currentInput}`
           : `${firstValue} ${currentOperator}`;
     }
+    if (result !== null) {
+      outputField.textContent = `${firstValue} ${currentOperator} ${currentInput} = ${result}`;
+    }
   } else {
     // Nothing committed yet
     outputField.textContent = "";
@@ -111,8 +114,7 @@ numberButtons.forEach((button) => {
       }
     }
 
-    // Normal Logic
-    // inputField.textContent = currentInput;
+    // Display
     updateDisplay();
   });
 });
@@ -131,7 +133,6 @@ operatorButtons.forEach((button) => {
     currentInput = "";
 
     // Show expression context
-    // outputField.textContent = `${firstValue} ${currentOperator}`;
     updateDisplay();
 
     // inputField.textContent = "0";
@@ -145,7 +146,6 @@ equalsButton.addEventListener("click", () => {
     result = operate(currentOperator, firstValue, secondValue);
 
     // Show full expression
-    // outputField.textContent = `${firstValue} ${currentOperator} ${secondValue}`;
     updateDisplay();
 
     // Display the result
