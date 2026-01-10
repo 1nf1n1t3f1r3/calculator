@@ -12,7 +12,8 @@ body {
 }
 
 #outputField,
-#inputField {
+#inputField,
+#historyField {
   border: 1px solid #333;
   padding: 10px;
   text-align: right;

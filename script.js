@@ -13,6 +13,8 @@ let secondValue = null;
 let currentOperator = null;
 let result = null;
 
+let history = [];
+
 // let shouldResetInput = false;
 
 // Input Field
@@ -81,8 +83,15 @@ numberButtons.forEach((button) => {
     // Delete Logic
     if (value === "C") {
       currentInput = "";
+      firstValue = null;
+      secondValue = null;
+      currentOperator = null;
+      result = null;
+
       inputField.textContent = "0";
+      outputField.textContent = "0";
       updateDisplay();
+
       return;
     }
 
@@ -127,6 +136,9 @@ operatorButtons.forEach((button) => {
     // Only commit if there's something to commit
     if (currentInput === "") return;
 
+    // What to do if we already have a currentOperator
+    if (currentInput !== "" && currentOperator !== null) return;
+
     firstValue = Number(currentInput);
     currentOperator = operator;
 
@@ -145,6 +157,13 @@ equalsButton.addEventListener("click", () => {
   if (currentOperator && currentInput !== "") {
     const secondValue = Number(currentInput);
     result = operate(currentOperator, firstValue, secondValue);
+
+    // Save to history
+    const expression = `${firstValue} ${currentOperator} ${secondValue} = ${result}`;
+    history.push(expression);
+
+    // Update history display
+    historyField.textContent = history.join("\n");
 
     // Show full expression
     updateDisplay();
