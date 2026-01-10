@@ -131,6 +131,7 @@ operatorButtons.forEach((button) => {
     currentOperator = operator;
 
     currentInput = "";
+    result = null;
 
     // Show expression context
     updateDisplay();
@@ -153,7 +154,7 @@ equalsButton.addEventListener("click", () => {
 
     // Prepare for chaining
     firstValue = result;
-    currentInput = "";
+    currentInput = result;
     currentOperator = null;
   }
 });
