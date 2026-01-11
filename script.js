@@ -171,11 +171,13 @@ operatorButtons.forEach((button) => {
     if (currentInput === "") return;
 
     // What to do if we already have a currentOperator
-    if (currentInput !== "" && currentOperator !== null) return;
+    if (currentInput !== "" && currentOperator !== null) {
+      calculate();
+    }
 
+    // Reset
     firstValue = Number(currentInput);
     currentOperator = operator;
-
     currentInput = "";
     result = null;
 
@@ -262,4 +264,25 @@ function clickButtonByText(text) {
       button.click();
     }
   });
+}
+
+// Last Minute Helper to allow 2 + 2 + 2 - style operations
+function calculate() {
+  if (!currentOperator || currentInput === "") return;
+
+  const secondValue = Number(currentInput);
+  result = operate(currentOperator, firstValue, secondValue);
+
+  // Save to history
+  const expression = `${firstValue} ${currentOperator} ${secondValue} = ${result}`;
+  history.push(expression);
+
+  if (history.length > MAX_HISTORY) history.shift();
+  renderHistory();
+
+  firstValue = result;
+  currentInput = result;
+  currentOperator = null;
+
+  inputField.textContent = result;
 }
