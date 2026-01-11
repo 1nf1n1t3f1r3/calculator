@@ -13,9 +13,10 @@ let secondValue = null;
 let currentOperator = null;
 let result = null;
 
-let savedResult = false;
-
 let history = [];
+
+const MAX_HISTORY = 10; // ← x entries
+const MAX_DECIMALS = 5; // ← y decimals
 
 // let shouldResetInput = false;
 
@@ -77,6 +78,7 @@ function updateDisplay() {
   }
 }
 
+// Function for the 'C' Delete All Functionality
 function c() {
   currentInput = "";
   firstValue = null;
@@ -87,6 +89,28 @@ function c() {
   inputField.textContent = "0";
   outputField.textContent = "0";
   updateDisplay();
+}
+
+// Limit size of History
+function renderHistory() {
+  historyField.innerHTML = "";
+
+  history.forEach((entry) => {
+    const line = document.createElement("div");
+    line.textContent = entry;
+    historyField.appendChild(line);
+  });
+}
+
+// Format Floats
+function formatNumber(num) {
+  if (!Number.isFinite(num)) return "Error";
+
+  // If it's an integer, return as-is
+  if (Number.isInteger(num)) return num;
+
+  // Otherwise, limit decimals and remove trailing zeros
+  return parseFloat(num.toFixed(MAX_DECIMALS));
 }
 
 // Number Button listeners
@@ -169,11 +193,16 @@ equalsButton.addEventListener("click", () => {
     result = operate(currentOperator, firstValue, secondValue);
 
     // Save to history
-    const expression = `${firstValue} ${currentOperator} ${secondValue} = ${result}`;
+    const expression = `${formatNumber(
+      firstValue
+    )} ${currentOperator} ${formatNumber(secondValue)} = ${formatNumber(
+      result
+    )}`;
     history.push(expression);
-
-    // Update history display
-    historyField.textContent = history.join("\n");
+    if (history.length > MAX_HISTORY) {
+      history.shift(); // remove oldest entry
+    }
+    renderHistory();
 
     // Show full expression
     updateDisplay();
@@ -185,7 +214,5 @@ equalsButton.addEventListener("click", () => {
     firstValue = result;
     currentInput = result;
     currentOperator = null;
-
-    savedResult = true;
   }
 });
