@@ -257,10 +257,11 @@ document.addEventListener("keydown", (event) => {
 
 // Keyboard Functionality Helper
 function clickButtonByText(text) {
-  const buttons = document.querySelectorAll("button");
+  const buttons = document.querySelectorAll("#buttons button");
 
   buttons.forEach((button) => {
     if (button.textContent === text) {
+      button.focus(); // 👈 THIS is the missing piece
       button.click();
     }
   });
