@@ -186,6 +186,7 @@ operatorButtons.forEach((button) => {
   });
 });
 
+// Clicky Buttons for =
 equalsButton.addEventListener("click", () => {
   // Only run if we have an operator and something in currentInput
   if (currentOperator && currentInput !== "") {
@@ -216,3 +217,49 @@ equalsButton.addEventListener("click", () => {
     currentOperator = null;
   }
 });
+
+// Keyboard Controls
+document.addEventListener("keydown", (event) => {
+  const key = event.key;
+
+  // Digits
+  if (key >= "0" && key <= "9") {
+    clickButtonByText(key);
+  }
+
+  // Operators
+  if (["+", "-", "*", "/"].includes(key)) {
+    clickButtonByText(key);
+  }
+
+  // Equals
+  if (key === "Enter" || key === "=") {
+    equalsButton.click();
+  }
+
+  // Backspace
+  if (key === "Backspace") {
+    clickButtonByText("Backspace");
+  }
+
+  // Clear (C)
+  if (key === "Escape") {
+    clickButtonByText("C");
+  }
+
+  // Decimal
+  if (key === ".") {
+    clickButtonByText(".");
+  }
+});
+
+// Keyboard Functionality Helper
+function clickButtonByText(text) {
+  const buttons = document.querySelectorAll("button");
+
+  buttons.forEach((button) => {
+    if (button.textContent === text) {
+      button.click();
+    }
+  });
+}
